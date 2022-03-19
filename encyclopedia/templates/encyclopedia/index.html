@@ -1,7 +1,7 @@
 {% extends "encyclopedia/layout.html" %}
 
 {% block title %}
-    Encyclopedia
+   encyclopedia
 {% endblock %}
 
 {% block body %}
@@ -9,8 +9,10 @@
 
     <ul>
         {% for entry in entries %}
-            <li>{{ entry }}</li>
+            <li><a href="/{{entry}}">{{ entry|safe }}</a></li>        
         {% endfor %}
     </ul>
-
+        
+        <p>{{title1}}</p>
+   <p>{{input_html}}</p>
 {% endblock %}

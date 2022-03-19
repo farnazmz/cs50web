@@ -1,12 +1,26 @@
 {% extends "encyclopedia/layout.html" %}
 
 {% block title %}
-    {{title}}
+{{title}}
 {% endblock %}
 
 {% block body %}
-    <h1>{{entry}}</h1>
+    
+ 
 
-   <p>information</p>
+ 
+  <p>entry{{entry|safe}}</p>
+  <p>error{{error|safe}}</p>
+  <p>{{title|safe}}  not found</p>
+  <p>content{{content|safe}}</p>
+
+
+  
+  <p>entry_html{{entry_html|safe}}</p>
+
+  {% for p in similar_results%}
+  <p>entry{{entry|safe}}</p>
+  {% endfor %}
+
 
 {% endblock %}

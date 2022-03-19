@@ -1,0 +1,26 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+search
+{% endblock %}
+
+{% block body %}
+    
+
+
+  <p> input{{input|safe}}</p>
+  <p>entry{{entry|safe}}</p>
+  
+  <p>error{{error|safe}}</p>
+  <p>title{{title|safe}}</p>
+  <p>{{title|safe}}  Not Found  </p>
+  
+
+ 
+  <p>{{ input_html }}    {{error}}</p> 
+  
+ 
+  <li><a >{{ entry|safe }}</a></li>        
+
+
+{% endblock %}
