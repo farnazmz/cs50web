@@ -64,7 +64,9 @@ def search(request):
                     if similar_data != None:
                         return render(request,"encyclopedia/entry.html", {
                             "title": title,
-                            "error": "   : not found, try below similar pages",
+                            "error": "not found, similar pages",
+                            "edit": "",
+                            "create": "create",
                             "similar_data": similar_data,
                             "search_form": form,
                             }) 
@@ -74,7 +76,9 @@ def search(request):
                 return render(request, "encyclopedia/entry.html", {
                             "title": title,
                             "title_html": title_html,  
-                            "error": "   :not found, create page",   
+                            "edit": "",
+                             "create": "create",
+                            "error": "not found, create page",   
                             "search_form": form
                         })           
         else: 
@@ -97,9 +101,11 @@ def create(request):
                 return render(request, "encyclopedia/entry.html", {
                     "title": title,
                     "entry": entry,
-                    "error": "  already exists, only edit is available",
+                    "error": "  page exists, only edit possible",
                     "create_form": form,
-                    "search_form": SearchInput()
+                    "search_form": SearchInput(),
+                    "edit": "edit",
+                    "create": ""
                 })      
             else:
                 entry = form.cleaned_data["create_entry"]
@@ -109,6 +115,8 @@ def create(request):
                 return render(request, "encyclopedia/entry.html", {
                     "title": title,
                     "entry": entry,
+                    "edit": "",
+                    "edit": "edit",
                     "search_form": SearchInput(),
                     "create_form": form
                  })
@@ -149,7 +157,9 @@ def random_page(request):
     return render(request, "encyclopedia/entry.html", {
             "title": title,
             "entry":entry,
-            "search_form": SearchInput(),                
+            "search_form": SearchInput(),   
+             "edit": "edit", 
+            "create": ""               
             })
        
 def entry(request, title):
@@ -159,7 +169,9 @@ def entry(request, title):
         return render(request, "encyclopedia/entry.html", {
             "title": title,
             "entry":entry_html,
-            "search_form": SearchInput(),                
+            "search_form": SearchInput(),  
+            "edit": "edit", 
+            "create": ""             
             })
     else: 
         similar_data = util.similar(title)
@@ -167,14 +179,18 @@ def entry(request, title):
             for s in similar_data:
                 return render(request, "encyclopedia/entry.html", {
                     "title": title,
-                    "error": "   :not found, try below similar pages",
+                    "error": "not found, similar pages:",
                     "similar_data": similar_data,
                     "s": s,
+                    "edit": "",
+                    "create": "create",
                     "search_form": SearchInput()
                 })
         else:
             return render(request, "encyclopedia/entry.html", {
                 "title": title,
-                "error": "   :not found, create page",   
+                "error": "not found, create page",
+                "edit": "",  
+                "create": "create", 
                 "search_form": SearchInput()
             })
