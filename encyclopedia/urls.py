@@ -5,7 +5,9 @@ from . import views
 urlpatterns = [
     path("", views.index, name="index"),
     path("search", views.search, name="search"),
-    path("<str:title>", views.entry, name="entry"),
-    path("similar", views.similar, name="similar")
+    path("create", views.create, name="create"),
+    path("edit/<str:title>/", views.edit, name="edit"),
+    path("<str:title>/", views.entry, name="entry")
+       
     
 ]

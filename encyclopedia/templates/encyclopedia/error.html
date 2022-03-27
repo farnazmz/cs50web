@@ -2,16 +2,16 @@
 
 {% extends "encyclopedia/layout.html" %}
 
+{% block title %}
+error
+{% endblock %}
 
 
 {% block body %}
-<h2>requested page was not found</h2>
-   
- 
-{% for p in similar_results%}
-<p>entry{{entry|safe}}</p>
-{% endfor %}
 
-<p>{{error|safe}}</p>
+   
+<p> title not found: {{title}} error{{error}}</p>
+
+
         
 {% endblock %}

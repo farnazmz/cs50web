@@ -18,17 +18,17 @@
 
             <form action="{% url 'search' %}">
                 {% csrf_token %}
-                {{ form }}
+                {{ search_form }}
                 <input type="submit">
             </form>
+            
             <div>
                 <a href="{% url 'index' %}">Home</a>
             </div>
+            
             <div>
-                <a href="{% url 'similar' %}">error similar</a>
-            </div>
-            <div>
-                Create New Page
+                
+                <a href="{% url 'create' %}">Create New Page</a>
             </div>
             <div>
                 Random Page

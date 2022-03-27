@@ -1,13 +1,15 @@
 from ast import Try
 from cgitb import html
 from distutils.log import error
+from doctest import IGNORE_EXCEPTION_DETAIL
 from encodings import search_function
 from logging import PlaceHolder
-from pickle import NONE
+from pickle import GET, NONE
 from re import M
 import re
 from tkinter.tix import Form
 from turtle import title
+from urllib import response
 from xml.dom.minidom import Attr
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
@@ -23,82 +25,159 @@ from django.views.generic.base import RedirectView
 from django.http import Http404
 
 class SearchInput(forms.Form):
-    title = forms.CharField(widget=forms.TextInput(attrs={"PlaceHolder":"Search"}))
+    title = forms.CharField(label="", widget=forms.TextInput(attrs={"PlaceHolder":"Title"}))
+
+class CreatePage(forms.Form):
+    create_title = forms.CharField(label="", widget=forms.TextInput(attrs={"PlaceHolder":"Create_Title"}))
+    create_entry = forms.CharField(widget=forms.Textarea(attrs={"PlaceHolder":"Create_Text Area"}))
+
+class EditPage(forms.Form):
+    entry = forms.CharField(widget=forms.Textarea(attrs={"PlaceHolder": "Edit Page"}), required=True)
 
 def index(request):
     entries = util.list_entries()
     return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries(),
-        "form": SearchInput()
+        "search_form": SearchInput()
         })
 
 def search(request):
     if request.method == "GET":
-            form = SearchInput(request.GET)
-            if form.is_valid():
-                list_entries = util.list_entries()
-                title = form.cleaned_data["title"]
-                search_results = [entry.lower() for entry in list_entries if title.lower() in entry.lower()]      
-                for i in search_results:           
-                    if title.lower() in search_results:
-                        entry_input = util.get_entry(title)
-                        input_html = Markdown().convert(entry_input)
+        form = SearchInput(request.GET)
+        if form.is_valid():
+            title = form.cleaned_data["title"]
+            list_entries = util.list_entries()
+            search_results = [entry.lower() for entry in list_entries if title.lower() in entry.lower() or entry.lower() in title.lower()] 
+            for i in search_results:      
+                if title.lower() in search_results:
+                    entry = util.get_entry(title)
+                    entry = Markdown().convert(entry)
+                    return render(request,"encyclopedia/entry.html", {
+                                "title": title,
+                                "entry": entry,
+                                "search_form": form,
+                                })             
+                else:  
+                    similar_data = util.similar(title)
+                    if similar_data != None:
                         return render(request,"encyclopedia/entry.html", {
-                            "entry_html":input_html,
-                            "form": form
+                            "title": title,
+                            "error": "   : not found, try below similar pages",
+                            "similar_data": similar_data,
+                            "search_form": form,
                             }) 
-                    else:
-                        return
-                list_entries = title 
-                search_results = list_entries
-                i = search_results
-                title = i
-                return render(request,"encyclopedia/entry.html", {     
-                    "title": title, 
-                    "form": form
-                    }) 
             else:
-                return render(request, "encyclopedia/index.html", {
-                    "form": form
+                entry_md = title
+                title_html = Markdown().convert(entry_md)
+                return render(request, "encyclopedia/entry.html", {
+                            "title": title,
+                            "title_html": title_html,  
+                            "error": "   :not found, create page",   
+                            "search_form": form
+                        })           
+
+        else: 
+            return render(request, "encyclopedia/index.html", {
+                    "search_form": form
                 })
-    else: 
+    else:
         return render(request, "encyclopedia/index.html", {
-                    "form": form
-                })
+            "search_form": form
+        })
+
+def create(request):
+    if request.method == "POST":
+        form = CreatePage(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data["create_title"]
+            entry = util.get_entry(title)
+            if entry != None:
+                entry = Markdown().convert(entry)
+                return render(request, "encyclopedia/entry.html", {
+                    "title": title,
+                    "entry": entry,
+                    "error": "  already exists, only edit is available",
+                    "create_form": form,
+                    "search_form": SearchInput()
+                })      
+            else:
+                entry = form.cleaned_data["create_entry"]
+                util.save_entry(title, entry)
+                entry = util.get_entry(title)
+                entry = Markdown().convert(entry)
+                return render(request, "encyclopedia/entry.html", {
+                    "title": title,
+                    "entry": entry,
+                    "search_form": SearchInput(),
+                    "create_form": form
+                 })
+    else: 
+        return render(request, "encyclopedia/create.html", {
+            "create_form": CreatePage(),
+            "search_form": SearchInput()   
+        }) 
+
+def edit(request, title):
+    if request.method == "POST":
+        form = EditPage(request.POST)
+        if form.is_valid():
+            entry = form.cleaned_data["entry"]
+            util.save_entry(title, entry)
+            entry = Markdown().convert(entry)     
+            return HttpResponseRedirect(reverse('entry', args=[title]))
+        else:
+            return render(request, "encyclopedia/edit.html", {
+                "edit_form": EditPage(title, entry), 
+                "search_form": SearchInput
+            })
+    else:
+        entry_md = util.get_entry(title)
+        if entry_md != None:
+            
+            return render(request, "encyclopedia/edit.html", { 
+                "title": title,
+                "edit_form": EditPage(initial={"entry": entry_md}),
+                "search_form": SearchInput()
+            })
+        else:
+            return render(request, "encyclopedia/edit.html", {
+                "edit_form": EditPage(title, entry), 
+                "search_form": SearchInput
+            })
+
+      
 
 def entry(request, title):
-    entry_input = util.get_entry(title)
-    if entry_input != None:
-        entry_html = Markdown().convert(entry_input)
+    entry_md = util.get_entry(title)
+    if entry_md != None:           
+        entry_html = Markdown().convert(entry_md)                      
         return render(request, "encyclopedia/entry.html", {
             "title": title,
-            "entry_html":entry_html,
-            "form": SearchInput()
-        })
-    else:
-        entry_input = title
-        entry_html = Markdown().convert(entry_input)
-        return render(request, "encyclopedia/entry.html", {
-            "title": title,
-            "form": SearchInput()
-        })
+            "entry":entry_html,
+            "search_form": SearchInput(),                
+            })
+    else: 
+        similar_data = util.similar(title)
+        if similar_data != None:
+            for s in similar_data:
+                return render(request, "encyclopedia/entry.html", {
+                    "title": title,
+                    "error": "   :not found, try below similar pages",
+                    "similar_data": similar_data,
+                    "s": s,
+                    "search_form": SearchInput()
+                })
+        else:
+            return render(request, "encyclopedia/entry.html", {
+                "title": title,
+                "error": "   :not found, create page",   
+                "search_form": SearchInput()
+            })
 
-def similar():
-    form = SearchInput(request.GET)
-    title = form.cleaned_data["title"]
-    list_entries = util.list_entries()
-    for i in range(len(list_entries), -1, -1):
-        for j in range(len(title), -1, -1):
-            if list_entries[i: -1] == title[j: -1]:
-                similar_results = [k.lower() for k in list_entries]
-                for m in similar_results:
-                    similar_results[0] = m
-                    m_html = Markdown().convert(m)
-                    return render(request,"encyclopedia/entry.html", {
-                            "entry":m_html,
-                            "form": form
-                            })
-                    
+
+
+
+
 
 
         
