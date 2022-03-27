@@ -3,6 +3,7 @@ from cgitb import html
 from distutils.log import error
 from doctest import IGNORE_EXCEPTION_DETAIL
 from encodings import search_function
+from html import entities
 from logging import PlaceHolder
 from pickle import GET, NONE
 from re import M
@@ -23,6 +24,7 @@ import encyclopedia
 from django.urls import reverse, path
 from django.views.generic.base import RedirectView
 from django.http import Http404
+import random
 
 class SearchInput(forms.Form):
     title = forms.CharField(label="", widget=forms.TextInput(attrs={"PlaceHolder":"Title"}))
@@ -75,7 +77,6 @@ def search(request):
                             "error": "   :not found, create page",   
                             "search_form": form
                         })           
-
         else: 
             return render(request, "encyclopedia/index.html", {
                     "search_form": form
@@ -133,20 +134,24 @@ def edit(request, title):
     else:
         entry_md = util.get_entry(title)
         if entry_md != None:
-            
+            entry = entry_md
             return render(request, "encyclopedia/edit.html", { 
                 "title": title,
-                "edit_form": EditPage(initial={"entry": entry_md}),
+                "edit_form": EditPage(initial={"entry": entry}),
                 "search_form": SearchInput()
             })
-        else:
-            return render(request, "encyclopedia/edit.html", {
-                "edit_form": EditPage(title, entry), 
-                "search_form": SearchInput
+
+def random_page(request):
+    entries = util.list_entries()
+    title = random.choice(entries)
+    entry_md = util.get_entry(title)
+    entry = Markdown().convert(entry_md)
+    return render(request, "encyclopedia/entry.html", {
+            "title": title,
+            "entry":entry,
+            "search_form": SearchInput(),                
             })
-
-      
-
+       
 def entry(request, title):
     entry_md = util.get_entry(title)
     if entry_md != None:           
@@ -173,27 +178,3 @@ def entry(request, title):
                 "error": "   :not found, create page",   
                 "search_form": SearchInput()
             })
-
-
-
-
-
-
-
-        
-
-
-
-        
-
-
-
-
-
-
-    
-
-            
-
-
-
