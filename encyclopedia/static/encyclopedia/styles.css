@@ -1,6 +1,7 @@
 body {
     margin: 0;
-    background-color: white;
+    background-color: rgb(255, 255, 255);
+    
 }
 
 code {
@@ -12,9 +13,14 @@ h1 {
     padding-top: 20px;
 }
 
+h3 {
+    font-style: oblique;
+    color: rgb(128, 0, 70);
+}
+
 textarea {
-    height: 90vh;
-    width: 80%;
+    height: 40vh;
+    width: 100%;
 }
 
 .main {
@@ -35,4 +41,9 @@ textarea {
 
 .sidebar h2 {
     margin-top: 5px;
+}
+
+ .mydiv {
+    padding:50px;
+   
 }

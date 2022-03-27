@@ -35,3 +35,12 @@ def get_entry(title):
         return f.read().decode("utf-8")
     except FileNotFoundError:
         return None
+
+def similar(title):
+    similar_data = []
+    for s in list_entries():
+        similar_data = [s for s in list_entries() if title.lower() in s.lower() or s.lower() in title.lower()]
+        if similar_data:
+            return similar_data
+        else:
+            return None
