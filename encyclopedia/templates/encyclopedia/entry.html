@@ -6,7 +6,8 @@
 {% endblock %}
 
 {% block body %}
-<p> <h3>{{title|safe}}</h3>{{error|safe}}</p>
+
+<h3>{{error|safe}}</h3>
 
 <div class="mydiv">
   <p>{{ entry|safe }}</p>
@@ -19,10 +20,10 @@
     <li><a href="/{{s}}">{{ s|safe }}</a></li>        
   {% endfor %}
 </div>
-
-<li><a href="{% url 'edit' title  %}">{{edit}}</a></li>
-<li><a href="{% url 'create'  %}">{{create}}</a></li>
-
+<ul>
+<a  class="h2" href="{% url 'edit' title  %}">{{edit}}</a>
+<a  class="h2" href="{% url 'create'  %}">{{create}}</a>
+</ul>
 {% endblock %}
 
 

@@ -13,29 +13,27 @@
 
 <body>
     <div class="row">
-        <div class="sidebar col-lg-2 col-md-3">
-            <h2>Wiki</h2>
-
-            <form action="{% url 'search' %}">
-                {% csrf_token %}
-                {{ search_form }}
-                <input type="submit">
-            </form>
-            
-            <div>
+        <div class=" sidebar col-lg-2 col-md-3">
+            <h1>Wiki</h1>          
+            <div class="sidefont">
                 <a href="{% url 'index' %}">Home</a>
             </div>
             
-            <div> 
+            <div class="sidefont"> 
                 <a href="{% url 'create' %}">Create New Page</a>
             </div>
-            <div>
+            <div class="sidefont">
                 <a href="{% url 'random_page' %}">Random Page</a>
             </div>
+            <form class="myform h3", action="{% url 'search' %}">
+                {% csrf_token %}
+                {{ search_form }}
+                <input type="submit" value="Search">
+            </form>
             {% block nav %}
             {% endblock %}
         </div>
-        <div class="main col-lg-10 col-md-9">
+        <div class="mydiv main col-lg-10 col-md-9">
             {% block body %}
             {% endblock %}
         </div>

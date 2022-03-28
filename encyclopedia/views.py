@@ -30,8 +30,8 @@ class SearchInput(forms.Form):
     title = forms.CharField(label="", widget=forms.TextInput(attrs={"PlaceHolder":"Title"}))
 
 class CreatePage(forms.Form):
-    create_title = forms.CharField(label="", widget=forms.TextInput(attrs={"PlaceHolder":"Create_Title"}))
-    create_entry = forms.CharField(widget=forms.Textarea(attrs={"PlaceHolder":"Create_Text Area"}))
+    create_title = forms.CharField(label="", widget=forms.TextInput(attrs={"PlaceHolder":"Title"}))
+    create_entry = forms.CharField(label="", widget=forms.Textarea(attrs={"PlaceHolder":"Create Markdown Format: Title/Text Area"}))
 
 class EditPage(forms.Form):
     entry = forms.CharField(widget=forms.Textarea(attrs={"PlaceHolder": "Edit Page"}), required=True)
@@ -64,7 +64,7 @@ def search(request):
                     if similar_data != None:
                         return render(request,"encyclopedia/entry.html", {
                             "title": title,
-                            "error": "not found, similar pages",
+                            "error": "Title Not Found, Similar Results",
                             "edit": "",
                             "create": "create",
                             "similar_data": similar_data,
@@ -78,7 +78,7 @@ def search(request):
                             "title_html": title_html,  
                             "edit": "",
                              "create": "create",
-                            "error": "not found, create page",   
+                            "error": "Title Not Found, Create Only",   
                             "search_form": form
                         })           
         else: 
@@ -101,7 +101,7 @@ def create(request):
                 return render(request, "encyclopedia/entry.html", {
                     "title": title,
                     "entry": entry,
-                    "error": "  page exists, only edit possible",
+                    "error": "  Title Exists, Edit Only",
                     "create_form": form,
                     "search_form": SearchInput(),
                     "edit": "edit",
@@ -112,7 +112,9 @@ def create(request):
                 util.save_entry(title, entry)
                 entry = util.get_entry(title)
                 entry = Markdown().convert(entry)
+                title_html = Markdown().convert(title)
                 return render(request, "encyclopedia/entry.html", {
+                    "title_html": title_html,
                     "title": title,
                     "entry": entry,
                     "edit": "",
@@ -165,8 +167,10 @@ def random_page(request):
 def entry(request, title):
     entry_md = util.get_entry(title)
     if entry_md != None:           
-        entry_html = Markdown().convert(entry_md)                      
+        entry_html = Markdown().convert(entry_md)
+        title_html = Markdown().convert(title)                      
         return render(request, "encyclopedia/entry.html", {
+            "title_html": title_html,
             "title": title,
             "entry":entry_html,
             "search_form": SearchInput(),  
@@ -179,7 +183,7 @@ def entry(request, title):
             for s in similar_data:
                 return render(request, "encyclopedia/entry.html", {
                     "title": title,
-                    "error": "not found, similar pages:",
+                    "error": "Title Not Found, Similar Results:",
                     "similar_data": similar_data,
                     "s": s,
                     "edit": "",
@@ -189,7 +193,7 @@ def entry(request, title):
         else:
             return render(request, "encyclopedia/entry.html", {
                 "title": title,
-                "error": "not found, create page",
+                "error": "Title Not Found, Create Only",
                 "edit": "",  
                 "create": "create", 
                 "search_form": SearchInput()
