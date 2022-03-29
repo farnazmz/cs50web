@@ -1,4 +1,3 @@
-
 {% extends "encyclopedia/layout.html" %}
 
 {% block title %}
@@ -7,10 +6,10 @@
 
 {% block body %}
 
-<h3>{{error|safe}}</h3>
+<h1>{{error|safe}}</h1>
 
-<div class="mydiv">
-  <p>{{ entry|safe }}</p>
+<div>
+  <p style="padding-left: 15px;">{{ entry|safe }}</p>
 </div>
 
 <div class="mydiv">
@@ -21,10 +20,8 @@
   {% endfor %}
 </div>
 <ul>
-<a  class="h2" href="{% url 'edit' title  %}">{{edit}}</a>
-<a  class="h2" href="{% url 'create'  %}">{{create}}</a>
+<a  class="h4" href="{% url 'edit' title  %}">{{edit}}</a>
+<a  class="h4" href="{% url 'create'  %}">{{create}}</a>
 </ul>
 {% endblock %}
-
-
 
