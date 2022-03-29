@@ -26,9 +26,8 @@ h1 {
     padding-bottom: 20px;
 }
 
-h4 {
-    
-    font-size: xx-large
+h4 {   
+    font-size: xx-large;
     color: #fff2f2;
  }
 
@@ -90,7 +89,6 @@ input {
     display: flex;
     flex-direction: column;  
     font-size: x-large !important;
-   
 }
 
 .search {
