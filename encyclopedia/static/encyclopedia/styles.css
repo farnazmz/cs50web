@@ -51,12 +51,12 @@ p {
 
 .sidebar {
     color: rgb(26, 9, 124);
-    background-color: #f3e9e9;
+    background-color: #fff2f2;
     height: 100vh;
     padding: 40px;
     border-color: transparent;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    border-radius: 15px;
+ 
 }
 
 .mydiv {
@@ -75,6 +75,7 @@ input {
     padding-right: 5px;
     padding-bottom: 5px;
 }
+
 
 .myform {
    position:relative;
@@ -95,4 +96,10 @@ input {
     width: 100%;
     font-size: 150px;
     line-height: 15px;
+}
+
+.fa {
+    color: rgb(26, 9, 124);
+    background-color: #fff2f2;
+    padding-top: 15px;
 }

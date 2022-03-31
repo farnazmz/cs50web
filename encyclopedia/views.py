@@ -57,6 +57,7 @@ def search(request):
                     return render(request,"encyclopedia/entry.html", {
                                 "title": title,
                                 "entry": entry,
+                                "edit": "edit",
                                 "search_form": form,
                                 })             
                 else:  

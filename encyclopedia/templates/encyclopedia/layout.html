@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="{% static 'encyclopedia/styles.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -33,8 +34,10 @@
             <form class="myform h3", action="{% url 'search' %}">
                 {% csrf_token %}
                 {{ search_form }}
-                <input type="submit" value="Search">
+                <input type="submit" value="&#xf002;" class=" fa fa-search">
             </form>
+
+            
 
             {% block nav %}
             {% endblock %}
