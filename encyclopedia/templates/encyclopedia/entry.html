@@ -1,0 +1,32 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+{{title}}
+{% endblock %}
+
+{% block body %}
+
+<h1>{{error|safe}}</h1>
+
+<div style="padding-left: 15px;">
+
+  <p >{{ entry|safe }}</p>
+  
+</div>
+
+<div class="mydiv">
+  
+  {% for s in similar_data %}
+    <li><a href="/{{s}}">{{ s|safe }}</a></li>  
+  {% endfor %}
+
+</div>
+
+<ul>
+
+  <h4><a  class="mychoice" href="{% url 'edit' title  %}">{{edit}}</a></h4>
+  <h4><a  class="mychoice" href="{% url 'create'  %}">{{create}}</a></h4>
+
+</ul>
+
+{% endblock %}
